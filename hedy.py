@@ -133,7 +133,7 @@ class ConvertToPython_3(ConvertToPython_2):
         #opzoeken is nu niet meer nodig
         return "print(" + '+'.join(args) + ')'
 
-class ConvertToPython(Transformer):
+class ConvertToPython(Transformer): # TODO: many str() are useless
     indent_level = 0
 
     def start(self, args): 
@@ -143,16 +143,16 @@ class ConvertToPython(Transformer):
         return "".join([self.indent_level * "\t" + x + ("\n" if x[-1] != '\n' else "") for x in args if x != ""]) 
 
     def if_statement(self, args): 
-        return "if " + args[0] + ":\n" + "".join(args[1:])
+        return "if " + str(args[0]) + ":\n" + "".join(args[1:])
 
     def elif_statement(self, args): 
-        return "elif " + args[0] + ":\n" + "".join(args[1:]) 
+        return "elif " + str(args[0]) + ":\n" + "".join(args[1:]) 
 
     def else_statement(self, args): 
         return "else:\n" + "".join(args) 
 
     def repeat(self, args): 
-        return "for _ in range(" +args[0] + "):\n" + "".join(args[1:])
+        return "for _ in range(" + args[0] + "):\n" + "".join(args[1:])
 
     def ranged_loop(self, args):
         return "for " + args[0] + " in range(" + args[1] + "," + args[2] +  "):\n" + "".join(args[3:])
@@ -200,16 +200,16 @@ class ConvertToPython(Transformer):
         return args[0] + "(" + ", ".join(args[1:]) + ")"
 
     def INTEGER(self, args): 
-        return int(args.value)
+        return str(args.value)
 
     def FLOAT(self, args): 
-        return float(args.value)
+        return str(args.value)
 
     def NAME(self, args): 
         return str(args.value)
 
     def STRING(self, args): 
-        return args.value
+        return  args.value
 
     def INDENT(self, args): 
         self.indent_level += 1 
